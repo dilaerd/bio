@@ -1,0 +1,68 @@
+from pprint import pprint
+text = 'tx_factors.txt'
+
+my_dict = {}
+name_list = []
+a_list = []
+c_list = []
+g_list = []
+t_list = []
+counter = 0
+
+with open(text) as in_fl:
+    for line in in_fl:
+        if line.startswith('>'):
+            counter = 0
+            name = line.strip('\n').split('\t')[1]
+            name_list.append(name)
+        else:
+            counter += 1
+            if counter == 1:
+                base_a = line.strip('\n').split('\t')
+                if "" in base_a:
+                    base_a.remove("")
+                a_list.append(base_a)
+            elif counter == 2:
+                base_c = line.strip('\n').split('\t')
+                if "" in base_c:
+                    base_c.remove("")
+                c_list.append(base_c)
+            elif counter == 3:
+                base_g = line.strip('\n').split('\t')
+                if "" in base_g:
+                    base_g.remove("")
+                g_list.append(base_g)
+            elif counter == 4:
+                base_t = line.strip('\n').split('\t')
+                if "" in base_t:
+                    base_t.remove("")
+                t_list.append(base_t)
+
+for name, base_a, base_c, base_g, base_t in zip(name_list, a_list, c_list, g_list, t_list):
+    my_dict[name] = base_a, base_c, base_g, base_t
+
+def writer(mydict):
+    newdict = {}
+    longstr_arr = []
+    for (a, c, g, t) in mydict.values():
+        mystr = ""
+        longstr = ""
+        # a listesi, c listesi g ve t listesi
+        for (a_each, c_each, g_each, t_each) in zip(a, c, g, t):
+            # anın birincisi, cninbirincisi vs.
+            mystr = ""
+            if a_each != "0.00":
+                mystr += 'A'
+            if c_each != "0.00":
+                mystr += 'C'
+            if g_each != "0.00":
+                mystr += 'G'
+            if t_each != "0.00":
+                mystr += 'T'
+            mystr = "[" + mystr + "]"
+            longstr += mystr
+        longstr_arr.append(longstr)
+    for i in range(len(name_list)):
+        newdict.update({name_list[i] : longstr_arr[i]})
+    print(newdict)
+writer(my_dict)
