@@ -1,2 +1,2 @@
-# bio_python
+# bio
 Bioinformatic analysis with Python
